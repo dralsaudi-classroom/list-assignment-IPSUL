@@ -1,149 +1,78 @@
-package com.example.project;
-
 public class DLL<T> {
     private DLLNode<T> head;
-    private DLLNode<T> current;
-    private int size;  
+    private DLLNode<T> tail;
+    private int size;
 
     public DLL() {
-        head = current = null;
+        head = null;
+        tail = null;
         size = 0;
     }
 
     public boolean empty() {
-        return head == null;
-    }
-
-    public boolean last() {
-        return current != null && current.next == null;
-    }
-
-    public boolean first() {
-        return current != null && current.previous == null;
-    }
-
-    public boolean full() {
-        return false;
-    }
-
-    public void findFirst() {
-        current = head;
-    }
-
-    public void findNext() {
-        if (current != null) {
-            current = current.next;
-        }
-    }
-
-    public void findPrevious() {
-        if (current != null) {
-            current = current.previous;
-        }
-    }
-
-    public T retrieve() {
-        if (current != null) {
-            return current.data;
-        }
-        return null;
-    }
-
-    public void update(T val) {
-        if (current != null) {
-            current.data = val;
-        }
+        return size == 0;
     }
 
     public void insert(T val) {
-        DLLNode<T> tmp = new DLLNode<>(val);
-        if (empty()) {
-            current = head = tmp;
+        DLLNode<T> newNode = new DLLNode<>(val);
+        if (head == null) {
+            head = newNode;
+            tail = newNode;
         } else {
-            tmp.next = current.next;
-            tmp.previous = current;
-            if (current.next != null) {
-                current.next.previous = tmp;
-            }
-            current.next = tmp;
-            current = tmp;
+            newNode.previous = tail;
+            tail.next = newNode;
+            tail = newNode;
         }
         size++;
     }
 
     public void remove() {
-        if (empty() || current == null) {
-            return;
-        }
-
-        if (current == head) {
-            head = head.next;
-            if (head != null) {
-                head.previous = null;
-            }
+        if (empty()) throw new IllegalStateException("The list is empty");
+        if (tail == head) {
+            head = null;
+            tail = null;
         } else {
-            if (current.previous != null) {
-                current.previous.next = current.next;
-            }
-            if (current.next != null) {
-                current.next.previous = current.previous;
-            }
+            tail = tail.previous;
+            tail.next = null;
         }
-
-        DLLNode<T> nextCurrent = current.next;
-        if (nextCurrent != null) {
-            current = nextCurrent;
-        } else {
-            current = current.previous;
-        }
-
         size--;
     }
 
     public void removeBetween(T e1, T e2) {
-        if (empty()) {
-            return;
-        }
+        if (empty()) return;
 
         DLLNode<T> node1 = head;
         while (node1 != null && !node1.data.equals(e1)) {
             node1 = node1.next;
         }
 
-        if (node1 == null || node1.next == null) {
-            return;
-        }
+        if (node1 == null) return;
 
         DLLNode<T> node2 = node1.next;
         while (node2 != null && !node2.data.equals(e2)) {
             node2 = node2.next;
         }
 
-        if (node2 == null) {
-            return;
-        }
+        if (node2 == null) return;
 
         node1.next = node2.next;
         if (node2.next != null) {
             node2.next.previous = node1;
         }
-
-        current = head;
-        size -= 2;
+        
+        size -= (node2 == null ? 1 : 2);
     }
 
-    public int size() {
-        return size;
+    public void findFirst() {
+        // This method needs to be implemented for iteration
     }
 
-    public boolean contains(T val) {
-        DLLNode<T> node = head;
-        while (node != null) {
-            if (node.data.equals(val)) {
-                return true;
-            }
-            node = node.next;
-        }
-        return false;
+    public void findNext() {
+        // This method needs to be implemented for iteration
+    }
+
+    public T retrieve() {
+        // This method needs to be implemented to return the current element
+        return null; // Return the appropriate element
     }
 }
