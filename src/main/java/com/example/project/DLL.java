@@ -82,16 +82,19 @@ public class DLL<T> {
                 head.previous = null;
             }
         } else {
-            current.previous.next = current.next;
+            if (current.previous != null) {
+                current.previous.next = current.next;
+            }
             if (current.next != null) {
                 current.next.previous = current.previous;
             }
         }
 
-        if (current.next == null) {
-            current = head;
+        DLLNode<T> nextCurrent = current.next;
+        if (nextCurrent != null) {
+            current = nextCurrent;
         } else {
-            current = current.next;
+            current = current.previous;
         }
 
         size--;
@@ -116,13 +119,17 @@ public class DLL<T> {
             node2 = node2.next;
         }
 
-        if (node2 == null || node1 == node2) {
+        if (node2 == null) {
             return;
         }
 
-        node1.next = node2;
-        node2.previous = node1;
+        node1.next = node2.next;
+        if (node2.next != null) {
+            node2.next.previous = node1;
+        }
+
         current = head;
+        size -= 2;
     }
 
     public int size() {
