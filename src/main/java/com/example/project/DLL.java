@@ -1,78 +1,94 @@
+package com.example.project;
+
 public class DLL<T> {
-    private DLLNode<T> head;
-    private DLLNode<T> tail;
-    private int size;
+	private DLLNode<T> head;
+	private DLLNode<T> current;
 
     public DLL() {
-        head = null;
-        tail = null;
-        size = 0;
+        head = current = null;
     }
-
     public boolean empty() {
-        return size == 0;
+        return head == null;
     }
-
-    public void insert(T val) {
-        DLLNode<T> newNode = new DLLNode<>(val);
-        if (head == null) {
-            head = newNode;
-            tail = newNode;
-        } else {
-            newNode.previous = tail;
-            tail.next = newNode;
-            tail = newNode;
-        }
-        size++;
+    public boolean last() {
+        return current.next == null;
     }
-
-    public void remove() {
-        if (empty()) throw new IllegalStateException("The list is empty");
-        if (tail == head) {
-            head = null;
-            tail = null;
-        } else {
-            tail = tail.previous;
-            tail.next = null;
-        }
-        size--;
+    public boolean first() {
+        return current.previous == null;
     }
-
-    public void removeBetween(T e1, T e2) {
-        if (empty()) return;
-
-        DLLNode<T> node1 = head;
-        while (node1 != null && !node1.data.equals(e1)) {
-            node1 = node1.next;
-        }
-
-        if (node1 == null) return;
-
-        DLLNode<T> node2 = node1.next;
-        while (node2 != null && !node2.data.equals(e2)) {
-            node2 = node2.next;
-        }
-
-        if (node2 == null) return;
-
-        node1.next = node2.next;
-        if (node2.next != null) {
-            node2.next.previous = node1;
-        }
-        
-        size -= (node2 == null ? 1 : 2);
+    public boolean full() {
+        return false;
     }
-
     public void findFirst() {
-        // This method needs to be implemented for iteration
+        current = head;
     }
-
     public void findNext() {
-        // This method needs to be implemented for iteration
+        current = current.next;
     }
-
+    public void findPrevious() {
+        current = current.previous;
+    }
     public T retrieve() {
-        // This method needs to be implemented to return the current element
-        return null; // Return the appropriate element
+        return current.data;
     }
-}
+    public void update(T val) {
+        current.data = val;
+    }
+    public void insert(T val) {
+        DLLNode<T> tmp = new DLLNode<T>(val);
+        if(empty()) {
+            current = head = tmp;
+        }
+        else {
+            tmp.next = current.next;
+            tmp.previous = current;
+            if(current.next != null)
+                current.next.previous = tmp;
+            current.next = tmp;
+            current = tmp;
+        }
+    }
+    public void remove() {
+        if(current == head) {
+            head = head.next;
+            if(head != null)
+               head.previous = null;
+        }
+        else {
+            current.previous.next = current.next;
+            if(current.next != null)
+               current.next.previous = current.previous;
+        }
+        if(current.next == null)
+            current = head;
+        else
+            current = current.next;
+    }
+    public void removeBetween(T e1, T e2) {
+        DLLNode<T> tmp1=null,tmp2=null;
+        for (current=head; current!=null; current=current.next) {
+            if(current.data.equals(e1)) {
+                 tmp1 = current;
+            }
+            if(current.data.equals(e2)) {
+                tmp2 = current;
+            }
+        }
+        if(tmp1!=null&&tmp2!=null) {
+            current = tmp1;
+            current.next = tmp2;
+        }
+        current=head;
+        }
+
+
+        // throw new UnsupportedOperationException("Not supported yet.");
+        // Write the method removeBetween, member of the class DoubleLinkedList. The method
+        // takes two elements e1 and e2, and removes all the elements between the two elements
+        // (e1 and e2 not included). If e1 or e2 or both doesn’t exist, no element will be removed. You can assume the elements to be unique, e1 comes before e2, and that
+        // e1 ̸= e2. Current is moved to head if the removal is successful. Do not call any
+        // methods and do not use any auxiliary data structures. The method signature
+        // is: public void removeBetween(T e1, T e2).
+        // Example 3.1. Given the list: A ↔ B ↔ C ↔ D ↔ E ↔ F, removeBetween(’B’,
+        // ’E’) results in: A ↔ B ↔ E ↔ F.
+    }
